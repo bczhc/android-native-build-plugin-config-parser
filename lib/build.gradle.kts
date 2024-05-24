@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     implementation("org.tomlj:tomlj:1.1.1")
-    implementation("com.github.bczhc:android-target-defs:514661078b")
+    implementation("com.github.bczhc:android-target-defs:ac1ea2f9fc")
     implementation(gradleApi())
     implementation("org.scala-lang:scala-library:2.13.10")
 }
