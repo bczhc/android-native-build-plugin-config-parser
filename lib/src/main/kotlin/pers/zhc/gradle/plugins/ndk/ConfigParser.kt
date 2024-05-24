@@ -2,10 +2,13 @@ package pers.zhc.gradle.plugins.ndk
 
 import org.gradle.api.GradleException
 import org.tomlj.Toml
+import pers.zhc.android.def.AndroidAbi
+import pers.zhc.android.def.AndroidTarget
+import pers.zhc.android.def.BuildType
 import java.io.File
 
 object ConfigParser {
-    fun parse(configFile: File) {
+    fun parse(configFile: File): Config {
         val toml = Toml.parse(configFile.reader())
         if (toml.hasErrors()) {
             for (error in toml.errors()) {
@@ -14,7 +17,19 @@ object ConfigParser {
             throw GradleException("Toml parser has errors.")
         }
 
+        val buildType = toml.getString("ndk.build_type") ?: let {
+            println("`ndk.build_type` not specified; use default \"debug\"")
+            "debug"
+        }
+        val targets = toml.requireArray("ndk.targets").map {
+            val parsed = BuildTarget.parse(it)
+            AndroidTarget(AndroidAbi.from(parsed.abi), parsed.api)
+        }
 
+        return Config(ndk = NdkConfig(
+            buildType = BuildType.from(buildType),
+            targets = targets
+        ))
     }
 
     data class BuildTarget(
@@ -48,4 +63,14 @@ build_targets = ["arm64-v8a-29", "x86_64-29"]"""
             }
         }
     }
+
+    data class Config(
+        val ndk: NdkConfig,
+    )
+
+    data class NdkConfig(
+        val targets: List<AndroidTarget>,
+        val buildType: BuildType,
+    )
+
 }

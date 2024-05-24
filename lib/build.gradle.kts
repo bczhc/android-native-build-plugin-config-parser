@@ -16,15 +16,10 @@ plugins {
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api("org.apache.commons:commons-math3:3.6.1")
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation("com.google.guava:guava:31.1-jre")
-
     implementation("org.tomlj:tomlj:1.1.1")
-    implementation("com.github.bczhc:android-native-build-plugin:c546ada670")
+    implementation("com.github.bczhc:android-target-defs:514661078b")
     implementation(gradleApi())
+    implementation("org.scala-lang:scala-library:2.13.10")
 }
 
 testing {
